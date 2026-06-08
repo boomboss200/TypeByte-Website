@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TypeByte — Type Rough. Send Polished.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --orange: #FF6B35;
+      --amber: #FF9F0A;
+      --bg: #0F0B00;
+      --bg2: #1A1200;
+      --bg3: #2E1F00;
+      --glass: rgba(255, 255, 255, 0.06);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --text: #FEFDFB;
+      --text-dim: rgba(254, 253, 251, 0.55);
+      --serif: 'DM Serif Display', Georgia, serif;
+      --sans: 'DM Sans', sans-serif;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ── Background ── */
+    .bg-gradient {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: radial-gradient(ellipse at top left, #2E1F00 0%, #0F0B00 50%, #1A1200 100%);
+    }
+
+    .blobs {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      animation: drift linear infinite alternate;
+    }
+
+    .blob-1 {
+      width: 340px;
+      height: 340px;
+      background: var(--orange);
+      opacity: 0.13;
+      top: -80px;
+      left: -60px;
+      animation-duration: 9s;
+    }
+
+    .blob-2 {
+      width: 260px;
+      height: 260px;
+      background: var(--amber);
+      opacity: 0.09;
+      bottom: 20%;
+      right: -40px;
+      animation-duration: 11s;
+      animation-delay: -3s;
+    }
+
+    .blob-3 {
+      width: 200px;
+      height: 200px;
+      background: var(--orange);
+      opacity: 0.07;
+      top: 50%;
+      left: 40%;
+      animation-duration: 13s;
+      animation-delay: -6s;
+    }
+
+    @keyframes drift {
+      from {
+        transform: translate(0, 0) scale(1);
+      }
+
+      to {
+        transform: translate(30px, 40px) scale(1.08);
+      }
+    }
+
+    /* ── Layout ── */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 18px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(15, 11, 0, 0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 107, 53, 0.1);
+    }
+
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 22px;
+      letter-spacing: -0.3px;
+    }
+
+    .nav-logo span {
+      background: linear-gradient(90deg, var(--orange), var(--amber));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-badge {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--orange);
+      border: 1px solid rgba(255, 107, 53, 0.3);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 140px 0 80px;
+      text-align: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      margin-bottom: 28px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--orange);
+      border: 1px solid rgba(255, 107, 53, 0.25);
+      padding: 6px 16px;
+      border-radius: 20px;
+      background: rgba(255, 107, 53, 0.08);
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(44px, 8vw, 72px);
+      line-height: 1.08;
+      letter-spacing: -1.5px;
+      margin-bottom: 24px;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    .hero-title .grad {
+      background: linear-gradient(90deg, var(--orange), var(--amber));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--text-dim);
+      max-width: 500px;
+      margin: 0 auto 48px;
+      line-height: 1.65;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    /* ── Keyboard mock ── */
+    .keyboard-wrap {
+      animation: fadeUp 0.6s 0.3s ease both;
+      margin-bottom: 64px;
+    }
+
+    .phone-frame {
+      display: inline-block;
+      position: relative;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 28px;
+      padding: 14px 10px 10px;
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), 0 0 60px rgba(255, 107, 53, 0.08);
+      max-width: 320px;
+      width: 100%;
+    }
+
+    .phone-screen {
+      background: #1a1a2e;
+      border-radius: 18px;
+      overflow: hidden;
+      font-size: 13px;
+    }
+
+    .app-bar {
+      padding: 10px 14px 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .app-bar-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--glass-border);
+    }
+
+    .app-bar-title {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.4);
+      flex: 1;
+      text-align: center;
+    }
+
+    .chat-area {
+      padding: 10px 12px;
+      min-height: 70px;
+    }
+
+    .chat-bubble {
+      display: inline-block;
+      padding: 7px 11px;
+      border-radius: 14px;
+      font-size: 12px;
+      line-height: 1.4;
+      margin-bottom: 6px;
+      max-width: 75%;
+    }
+
+    .chat-in {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .chat-out {
+      background: linear-gradient(135deg, var(--orange), var(--amber));
+      color: #fff;
+      float: right;
+      clear: both;
+    }
+
+    .chat-label {
+      font-size: 9px;
+      color: rgba(255, 255, 255, 0.3);
+      margin-bottom: 2px;
+    }
+
+    .kb-toolbar {
+      background: rgba(255, 255, 255, 0.05);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .kb-field {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 107, 53, 0.4);
+      border-radius: 8px;
+      padding: 5px 8px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.6);
+      font-family: var(--sans);
+    }
+
+    .kb-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .kb-btn.primary {
+      background: linear-gradient(135deg, var(--orange), var(--amber));
+      color: #fff;
+      animation: pulse-glow 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 53, 0);
+      }
+
+      50% {
+        box-shadow: 0 0 12px 3px rgba(255, 107, 53, 0.4);
+      }
+    }
+
+    .kb-rows {
+      background: rgba(20, 15, 0, 0.9);
+      padding: 6px 4px 8px;
+    }
+
+    .kb-row {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      margin-bottom: 4px;
+    }
+
+    .key {
+      height: 32px;
+      min-width: 27px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.13);
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--sans);
+      padding: 0 5px;
+    }
+
+    .key.space {
+      min-width: 130px;
+    }
+
+    .key.dark {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* ── Sections ── */
+    section {
+      padding: 80px 0;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(28px, 5vw, 42px);
+      line-height: 1.15;
+      letter-spacing: -0.8px;
+      margin-bottom: 16px;
+    }
+
+    .section-body {
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+
+    /* ── Feature pills ── */
+    .features {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .feature-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 20px 22px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      backdrop-filter: blur(12px);
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .feature-card:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 107, 53, 0.3);
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--orange), var(--amber));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+    }
+
+    .feature-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .feature-desc {
+      font-size: 14px;
+      color: var(--text-dim);
+      line-height: 1.55;
+    }
+
+    /* ── Privacy ── */
+    .privacy-box {
+      background: rgba(255, 107, 53, 0.06);
+      border: 1px solid rgba(255, 107, 53, 0.2);
+      border-radius: 20px;
+      padding: 32px;
+      margin-top: 32px;
+    }
+
+    .privacy-box h3 {
+      font-family: var(--serif);
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .privacy-items {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .privacy-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 15px;
+      color: var(--text-dim);
+      line-height: 1.55;
+    }
+
+    .privacy-check {
+      color: var(--orange);
+      font-size: 16px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .privacy-highlight {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* ── Plans ── */
+    .plans {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .plan-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 28px 24px;
+      position: relative;
+      backdrop-filter: blur(12px);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .plan-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .plan-card.featured {
+      border-color: rgba(255, 107, 53, 0.45);
+      background: rgba(255, 107, 53, 0.09);
+    }
+
+    .plan-card.selected {
+      border-color: var(--orange) !important;
+      background: rgba(255, 107, 53, 0.15) !important;
+    }
+
+    .plan-card.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--orange), var(--amber));
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .plan-badge {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--orange);
+      background: rgba(255, 107, 53, 0.15);
+      padding: 3px 9px;
+      border-radius: 10px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .plan-name {
+      font-family: var(--serif);
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    .plan-price {
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .plan-price span {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--text-dim);
+    }
+
+    .plan-period {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+    }
+
+    .plan-features {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 0;
+    }
+
+    .plan-features li {
+      font-size: 13px;
+      color: var(--text-dim);
+      padding: 5px 0;
+      display: flex;
+      gap: 8px;
+    }
+
+    .plan-features li::before {
+      content: '✦';
+      color: var(--orange);
+      font-size: 9px;
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+
+    /* ── Form ── */
+    #waitlist {
+      padding: 80px 0 120px;
+    }
+
+    .form-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 40px;
+      backdrop-filter: blur(16px);
+    }
+
+    .form-title {
+      font-family: var(--serif);
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .form-sub {
+      font-size: 15px;
+      color: var(--text-dim);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 520px) {
+      .field-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45);
+      margin-bottom: 7px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-family: var(--sans);
+      font-size: 15px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.25);
+    }
+
+    input:focus,
+    select:focus {
+      border-color: rgba(255, 107, 53, 0.6);
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.12);
+    }
+
+    select option {
+      background: #1a1200;
+      color: var(--text);
+    }
+
+    /* Plan selector in form */
+    .plan-selector-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .plan-chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .plan-chip {
+      padding: 9px 18px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+
+    .plan-chip:hover {
+      border-color: rgba(255, 107, 53, 0.4);
+      color: var(--text);
+    }
+
+    .plan-chip.active {
+      background: linear-gradient(135deg, var(--orange), var(--amber));
+      border-color: transparent;
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(255, 107, 53, 0.35);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--orange), var(--amber));
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 8px;
+      transition: opacity 0.2s, transform 0.15s;
+      box-shadow: 0 8px 24px rgba(255, 107, 53, 0.35);
+    }
+
+    .submit-btn:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .form-note {
+      font-size: 12px;
+      color: var(--text-dim);
+      text-align: center;
+      margin-top: 14px;
+      line-height: 1.5;
+    }
+
+    /* ── Success ── */
+    .success-state {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, var(--orange), var(--amber));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 8px 32px rgba(255, 107, 53, 0.4);
+    }
+
+    .success-title {
+      font-family: var(--serif);
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .success-sub {
+      font-size: 15px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* ── Error ── */
+    .error-msg {
+      color: #ff6b6b;
+      font-size: 13px;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .error-msg.show {
+      display: block;
+    }
+
+    /* ── Footer ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--glass-border);
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+
+    footer a {
+      color: var(--orange);
+      text-decoration: none;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bg-gradient"></div>
+  <div class="blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-logo">Type<span>Byte</span></div>
+    <div class="nav-badge">Coming Soon</div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="container">
+    <section class="hero">
+      <div class="hero-eyebrow">AI Keyboard for iOS</div>
+      <h1 class="hero-title">Type rough.<br /><span class="grad">Send polished.</span></h1>
+      <p class="hero-sub">AI rewrites your messages inside the keyboard — no switching apps, no copy-paste. One tap. Any
+        app.</p>
+
+      <div class="keyboard-wrap">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="app-bar">
+              <div class="app-bar-dot"></div>
+              <div class="app-bar-title">iMessage</div>
+              <div class="app-bar-dot"></div>
+            </div>
+            <div class="chat-area">
+              <div class="chat-label">You typed</div>
+              <div class="chat-bubble chat-in">hey can u pls send the report tmrw morning thnks</div>
+              <div style="clear:both; height:8px;"></div>
+              <div class="chat-label" style="text-align:right">TypeByte rewrote ✦</div>
+              <div class="chat-bubble chat-out">Hi! Could you please send the report tomorrow morning? Thank you so
+                much!</div>
+            </div>
+            <div class="kb-toolbar">
+              <div class="kb-field">hey can u pls send the report…</div>
+              <button class="kb-btn">↓</button>
+              <button class="kb-btn">↑</button>
+              <button class="kb-btn primary">✦</button>
+            </div>
+            <div class="kb-rows">
+              <div class="kb-row">
+                <div class="key">q</div>
+                <div class="key">w</div>
+                <div class="key">e</div>
+                <div class="key">r</div>
+                <div class="key">t</div>
+                <div class="key">y</div>
+                <div class="key">u</div>
+                <div class="key">i</div>
+                <div class="key">o</div>
+                <div class="key">p</div>
+              </div>
+              <div class="kb-row">
+                <div class="key">a</div>
+                <div class="key">s</div>
+                <div class="key">d</div>
+                <div class="key">f</div>
+                <div class="key">g</div>
+                <div class="key">h</div>
+                <div class="key">j</div>
+                <div class="key">k</div>
+                <div class="key">l</div>
+              </div>
+              <div class="kb-row">
+                <div class="key dark">⇧</div>
+                <div class="key">z</div>
+                <div class="key">x</div>
+                <div class="key">c</div>
+                <div class="key">v</div>
+                <div class="key">b</div>
+                <div class="key">n</div>
+                <div class="key">m</div>
+                <div class="key dark">⌫</div>
+              </div>
+              <div class="kb-row">
+                <div class="key dark">123</div>
+                <div class="key space">space</div>
+                <div class="key dark">return</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a href="#waitlist"
+        style="display:inline-block; padding: 15px 36px; border-radius: 100px; background: linear-gradient(135deg, var(--orange), var(--amber)); color: #fff; font-weight: 600; font-size: 16px; text-decoration: none; box-shadow: 0 8px 24px rgba(255,107,53,0.4); transition: transform 0.15s;"
+        onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">Join the Waitlist
+        →</a>
+    </section>
+
+    <!-- Features -->
+    <section class="reveal">
+      <div class="section-label">What it does</div>
+      <h2 class="section-title">Everything, inside the keyboard</h2>
+      <p class="section-body">No app switching. No copy-paste. TypeByte lives in your keyboard — so AI is always one tap
+        away, in every app you already use.</p>
+      <div class="features">
+        <div class="feature-card">
+          <div class="feature-icon">✦</div>
+          <div>
+            <div class="feature-title">AI Rewrite in one tap</div>
+            <div class="feature-desc">Type rough, tap the wand. TypeByte fixes spelling, grammar, and phrasing — or
+              generates a full message from your instruction.</div>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎤</div>
+          <div>
+            <div class="feature-title">Voice to polished text</div>
+            <div class="feature-desc">Speak your message. TypeByte transcribes and rewrites it into something clean and
+              ready to send.</div>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <div>
+            <div class="feature-title">Works in every app</div>
+            <div class="feature-desc">iMessage, WhatsApp, Gmail, Notes — anywhere you can type, TypeByte is there. It's
+              a keyboard, not a separate app.</div>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <div>
+            <div class="feature-title">Personalized to your role</div>
+            <div class="feature-desc">Tell TypeByte your role and experience level once. Every rewrite is calibrated to
+              your voice, your context, your audience.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy -->
+    <section class="reveal">
+      <div class="section-label">Privacy First</div>
+      <h2 class="section-title">Your words are yours</h2>
+      <p class="section-body">TypeByte is built around a simple principle: we don't store what you type. Period.</p>
+      <div class="privacy-box">
+        <h3>What we do (and don't) store</h3>
+        <div class="privacy-items">
+          <div class="privacy-item">
+            <span class="privacy-check">✦</span>
+            <span><span class="privacy-highlight">Your typing is on-device only.</span> Text you type or rewrite never
+              touches our database. It goes directly to the AI model and nowhere else.</span>
+          </div>
+          <div class="privacy-item">
+            <span class="privacy-check">✦</span>
+            <span><span class="privacy-highlight">No message logs.</span> We do not store, read, or retain any of your
+              messages, rewrites, or voice recordings in our servers.</span>
+          </div>
+          <div class="privacy-item">
+            <span class="privacy-check">✦</span>
+            <span><span class="privacy-highlight">AI, not us.</span> Rewrite requests are sent directly to GPT-4o Mini.
+              The AI processes it and returns the result. We're not in that loop.</span>
+          </div>
+          <div class="privacy-item">
+            <span class="privacy-check">✦</span>
+            <span><span class="privacy-highlight">Stats stay local.</span> Your usage stats (rewrites, acceptance rate)
+              live in on-device storage, shared only between the keyboard and main app via App Group.</span>
+          </div>
+          <div class="privacy-item">
+            <span class="privacy-check">✦</span>
+            <span><span class="privacy-highlight">The only thing we have of yours is your email.</span> Your account
+              email, name, and selected plan — that's the full extent of our database record for you.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Plans -->
+    <section class="reveal">
+      <div class="section-label">Plans</div>
+      <h2 class="section-title">Free to start. Unlimited with Pro.</h2>
+      <p class="section-body">Try it free — 10 rewrites to feel the magic. Then go unlimited.</p>
+      <div class="plans">
+        <div class="plan-card">
+          <div class="plan-badge">Free</div>
+          <div class="plan-name">Freemium</div>
+          <div class="plan-price">$0</div>
+          <div class="plan-period">forever</div>
+          <ul class="plan-features">
+            <li>10 AI text rewrites</li>
+            <li>5 voice sessions</li>
+            <li>Full keyboard</li>
+            <li>All stats</li>
+          </ul>
+        </div>
+        <div class="plan-card featured">
+          <div class="plan-badge">Popular</div>
+          <div class="plan-name">Weekly</div>
+          <div class="plan-price">$4.99 <span>/wk</span></div>
+          <div class="plan-period">billed weekly</div>
+          <ul class="plan-features">
+            <li>Unlimited AI rewrites</li>
+            <li>Unlimited voice</li>
+            <li>All features</li>
+            <li>Priority updates</li>
+          </ul>
+        </div>
+        <div class="plan-card">
+          <div class="plan-badge">Best Value</div>
+          <div class="plan-name">Monthly</div>
+          <div class="plan-price">$10.99 <span>/mo</span></div>
+          <div class="plan-period">billed monthly</div>
+          <ul class="plan-features">
+            <li>Unlimited AI rewrites</li>
+            <li>Unlimited voice</li>
+            <li>All features</li>
+            <li>Priority updates</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Waitlist Form -->
+    <section id="waitlist" class="reveal">
+      <div class="form-card">
+        <div id="form-state">
+          <div class="form-title">Join the waitlist</div>
+          <p class="form-sub">Be first when TypeByte launches. We'll notify you with early access — no spam, just the
+            launch.</p>
+
+          <div class="field-group">
+            <div class="field-row">
+              <div>
+                <label for="fname">First Name</label>
+                <input type="text" id="fname" placeholder="Alex" />
+              </div>
+              <div>
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="alex@example.com" />
+              </div>
+            </div>
+
+            <div>
+              <label for="occupation">Occupation</label>
+              <select id="occupation">
+                <option value="" disabled selected>Select your role</option>
+                <option value="student">Student</option>
+                <option value="tech">Tech / Engineering</option>
+                <option value="design">Design / Creative</option>
+                <option value="business">Business / Management</option>
+                <option value="marketing">Marketing / Content</option>
+                <option value="healthcare">Healthcare</option>
+                <option value="education">Education</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="experience">Experience Level</label>
+              <select id="experience">
+                <option value="" disabled selected>How comfortable are you with AI tools?</option>
+                <option value="beginner">Beginner — just getting started</option>
+                <option value="intermediate">Intermediate — use AI occasionally</option>
+                <option value="advanced">Advanced — use AI regularly</option>
+                <option value="expert">Expert — deeply integrated into workflow</option>
+              </select>
+            </div>
+
+            <div>
+              <span class="plan-selector-label">Interested plan (optional)</span>
+              <div class="plan-chips">
+                <div class="plan-chip" data-plan="freemium">Free (10 rewrites)</div>
+                <div class="plan-chip" data-plan="weekly">Weekly $4.99</div>
+                <div class="plan-chip" data-plan="monthly">Monthly $10.99</div>
+              </div>
+            </div>
+
+            <div class="error-msg" id="error-msg">Please fill in your name and a valid email.</div>
+
+            <button class="submit-btn" id="submit-btn" onclick="submitForm()">
+              Get Early Access →
+            </button>
+          </div>
+
+          <p class="form-note">🔒 We only store your name and email. No spam, no data selling. <a href="#privacy-note"
+              style="color:var(--orange);">See our privacy promise above.</a></p>
+        </div>
+
+        <div class="success-state" id="success-state">
+          <div class="success-icon">✦</div>
+          <div class="success-title">You're on the list!</div>
+          <p class="success-sub">We'll reach out when TypeByte is ready for early access.<br />Your words are about to
+            get a lot better.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div style="margin-bottom:8px; font-family: var(--serif); font-size:18px;">Type<span
+        style="background:linear-gradient(90deg,var(--orange),var(--amber));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Byte</span>
+    </div>
+    <div>© 2025 TypeByte · <a href="mailto:hello@typebyte.app">Contact</a> · Built by createbyte</div>
+    <div style="margin-top:6px; font-size:11px; color:rgba(254,253,251,0.3);">We only store your email. We never store
+      what you type.</div>
+  </footer>
+
+  <script>
+    // Supabase
+    const { createClient } = supabase;
+    const sb = createClient(
+      'https://aapdrhdpkjsmrisoohgo.supabase.co',
+      'sb_publishable_xv_Iy4NmEoE3Ichqy-af_w_VvshLuQv'
+    );
+
+    // Plan chip selection
+    let selectedPlan = '';
+    document.querySelectorAll('.plan-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.plan-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        selectedPlan = chip.dataset.plan;
+      });
+    });
+
+    // Submit
+    async function submitForm() {
+      const name = document.getElementById('fname').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const occupation = document.getElementById('occupation').value;
+      const experience = document.getElementById('experience').value;
+      const errEl = document.getElementById('error-msg');
+      const btn = document.getElementById('submit-btn');
+
+      if (!name || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errEl.classList.add('show');
+        return;
+      }
+      errEl.classList.remove('show');
+      btn.disabled = true;
+      btn.textContent = 'Joining…';
+
+      try {
+        const { error } = await sb.from('waitlist').insert([{
+          name,
+          email,
+          occupation: occupation || null,
+          experience_level: experience || null,
+          interested_plan: selectedPlan || null,
+          created_at: new Date().toISOString()
+        }]);
+
+        if (error) {
+          if (error.code === '23505') {
+            // Duplicate email
+            document.getElementById('form-state').style.display = 'none';
+            document.getElementById('success-state').style.display = 'block';
+            document.getElementById('success-state').querySelector('.success-sub').textContent = "You're already on the list! We'll reach out when TypeByte launches.";
+          } else {
+            btn.disabled = false;
+            btn.textContent = 'Get Early Access →';
+            errEl.textContent = 'Something went wrong. Please try again.';
+            errEl.classList.add('show');
+          }
+          return;
+        }
+
+        document.getElementById('form-state').style.display = 'none';
+        document.getElementById('success-state').style.display = 'block';
+      } catch (e) {
+        btn.disabled = false;
+        btn.textContent = 'Get Early Access →';
+        errEl.textContent = 'Network error. Please try again.';
+        errEl.classList.add('show');
+      }
+    }
+
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); observer.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Enter key on form
+    document.querySelectorAll('input').forEach(el => {
+      el.addEventListener('keydown', e => { if (e.key === 'Enter') submitForm(); });
+    });
+  </script>
+</body>
+
+</html>
